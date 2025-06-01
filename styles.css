@@ -1,0 +1,465 @@
+/* === "BETTER THAN GOOGLE" DARK THEME with ANIMATIONS & MODALS === */
+
+/* 1. CSS Variables & Global Resets
+   -------------------------------------------------------------------------- */
+:root {
+    /* Dynamic Dark Palette */
+    --bg-deepest: #0D1117;      /* GitHub Dark Background */
+    --bg-primary: #161B22;      /* Primary surfaces, modal background */
+    --bg-secondary: #21262D;    /* Slightly lighter surfaces, input backgrounds */
+    --bg-interactive: #30363D;  /* Hover states for some elements */
+    --text-primary: #C9D1D9;    /* Main text */
+    --text-secondary: #8B949E;  /* Subdued text, labels */
+    --accent-glow: #58A6FF;     /* Vibrant blue for accents, focus glows */
+    --accent-glow-hover: #79C0FF;
+    --danger-glow: #F85149;
+    --danger-glow-hover: #FF7B72;
+    --success-glow: #3FB950;
+    --border-color: #30363D;
+    --shadow-soft: rgba(0, 0, 0, 0.2);
+    --shadow-medium: rgba(0, 0, 0, 0.4);
+    --shadow-hard: rgba(0,0,0, 0.6);
+
+    /* Typography */
+    --font-sans: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: 'SFMono-Regular', Consolas, "Liberation Mono", Menlo, Courier, monospace;
+    --font-size-base: 16px;
+    --line-height-base: 1.6;
+
+    /* Spacing & Sizing */
+    --spacing-unit: 1rem;
+    --border-radius: 8px;
+    --container-max-width: 1100px;
+
+    /* Transitions & Animations */
+    --transition-fast: 0.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+    --transition-medium: 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+    --transition-slow: 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap'); /* Fallback if SF Pro not available */
+
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: var(--font-size-base); scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+
+body {
+    font-family: var(--font-sans), 'Roboto', sans-serif;
+    line-height: var(--line-height-base);
+    background-color: var(--bg-deepest);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: calc(var(--spacing-unit) * 1.5);
+    overflow-x: hidden; /* Prevent horizontal scroll from animations */
+}
+
+/* 2. Main Container & Header
+   -------------------------------------------------------------------------- */
+.container {
+    width: 100%;
+    max-width: var(--container-max-width);
+    margin: 0 auto;
+    background-color: var(--bg-primary);
+    border-radius: var(--border-radius);
+    box-shadow: 0 20px 50px var(--shadow-medium);
+    padding: calc(var(--spacing-unit) * 2);
+    transform-style: preserve-3d; /* For 3D-ish animations if desired */
+}
+
+header {
+    text-align: center;
+    margin-bottom: calc(var(--spacing-unit) * 2.5);
+    animation: slideDownFade 0.8s var(--transition-medium) both;
+}
+header h1 {
+    font-size: 2.8rem;
+    color: var(--text-primary);
+    font-weight: 700;
+    text-shadow: 0 0 15px var(--accent-glow), 0 0 5px var(--accent-glow);
+    letter-spacing: 1px;
+}
+
+/* 3. Layout & Sections
+   -------------------------------------------------------------------------- */
+.main-content {
+    display: flex;
+    gap: calc(var(--spacing-unit) * 2);
+    flex-wrap: wrap;
+}
+.left-section, .right-section {
+    flex: 1;
+    min-width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--spacing-unit) * 1.5);
+}
+
+/* Section Base Styles */
+#currency-section, #income-section, #transaction-section,
+#transactions-list, #summary-section-parent, #clear-dat,
+.animated-section /* Class for consistent section styling and animation */ {
+    background-color: var(--bg-secondary);
+    padding: calc(var(--spacing-unit) * 1.5);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 5px 15px var(--shadow-soft);
+    transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+}
+.animated-section:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 10px 25px var(--shadow-medium);
+}
+
+h2 {
+    font-size: 1.6rem;
+    color: var(--text-primary);
+    margin-bottom: var(--spacing-unit);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: calc(var(--spacing-unit) * 0.5);
+}
+
+/* 4. Form Elements & Buttons (Enhanced)
+   -------------------------------------------------------------------------- */
+label:not(.modal-overlay):not(.modal-close-btn):not(.btn) { /* Avoid styling modal utility labels */
+    display: block;
+    margin-bottom: calc(var(--spacing-unit) * 0.5);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+input[type="text"], input[type="number"], input[type="date"], select {
+    width: 100%;
+    padding: calc(var(--spacing-unit) * 0.75);
+    background-color: var(--bg-deepest);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: calc(var(--border-radius) / 2);
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    margin-bottom: var(--spacing-unit);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+input::placeholder { color: var(--text-secondary); opacity: 0.7; }
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--accent-glow);
+    background-color: var(--bg-primary); /* Slightly lighten on focus */
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3), 0 0 10px rgba(88, 166, 255, 0.2) inset;
+}
+input[type="date"] { color-scheme: dark; }
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(70%) sepia(80%) saturate(500%) hue-rotate(180deg) brightness(1.2); /* Brighter accent */
+    cursor: pointer;
+    transition: filter var(--transition-fast), transform var(--transition-fast);
+}
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    filter: invert(70%) sepia(80%) saturate(700%) hue-rotate(185deg) brightness(1.5);
+    transform: scale(1.1);
+}
+
+/* Button System */
+.btn {
+    display: inline-block;
+    padding: calc(var(--spacing-unit) * 0.8) calc(var(--spacing-unit) * 1.5);
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: calc(var(--border-radius) / 1.5);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden; /* For ripple effect */
+    border: none;
+    text-align: center;
+    margin-top: calc(var(--spacing-unit) * 0.5);
+}
+.btn i { margin-right: calc(var(--spacing-unit) * 0.5); }
+.btn-block { width: 100%; display: block; }
+
+.btn-primary {
+    background-color: var(--accent-glow);
+    color: var(--bg-deepest);
+    box-shadow: 0 4px 15px -5px var(--accent-glow);
+}
+.btn-primary:hover {
+    background-color: var(--accent-glow-hover);
+    color: var(--bg-deepest);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 6px 20px -5px var(--accent-glow);
+}
+.btn-primary:active {
+    transform: translateY(-1px) scale(0.99);
+    box-shadow: 0 2px 10px -5px var(--accent-glow);
+}
+
+.btn-danger {
+    background-color: var(--danger-glow);
+    color: var(--text-primary);
+    box-shadow: 0 4px 15px -5px var(--danger-glow);
+}
+.btn-danger:hover {
+    background-color: var(--danger-glow-hover);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 6px 20px -5px var(--danger-glow);
+}
+.btn-danger:active {
+    transform: translateY(-1px) scale(0.99);
+    box-shadow: 0 2px 10px -5px var(--danger-glow);
+}
+
+/* Ripple Effect on Buttons (Conceptual - pure CSS is tricky for perfect ripple) */
+.btn::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%, -50%);
+    transform-origin: 50% 50%;
+}
+.btn:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+}
+
+/* 5. Specific Content Sections
+   -------------------------------------------------------------------------- */
+#income-section p#income-display {
+    font-size: 1.5rem; color: var(--success-glow); font-weight: 700;
+    margin-bottom: var(--spacing-unit); text-shadow: 0 0 8px var(--success-glow);
+}
+#income-section p#income-display:empty::before {
+    content: "Current Income: Not Set"; color: var(--text-secondary); font-style: italic; text-shadow: none;
+}
+
+#transactions-container { max-height: 400px; overflow-y: auto; padding-right: calc(var(--spacing-unit) * 0.5); }
+.transaction-item {
+    display: flex; justify-content: space-between; align-items: center;
+    background-color: var(--bg-primary);
+    padding: var(--spacing-unit);
+    margin-bottom: var(--spacing-unit);
+    border-radius: var(--border-radius);
+    border-left: 5px solid var(--accent-glow);
+    box-shadow: 0 3px 8px var(--shadow-soft);
+    transition: all var(--transition-fast);
+    opacity: 0; /* For animation */
+    transform: translateX(-20px); /* For animation */
+    animation: slideInFromLeft 0.5s var(--transition-medium) forwards;
+}
+/* Stagger animation for transaction items */
+.transaction-item:nth-child(1) { animation-delay: 0.1s; }
+.transaction-item:nth-child(2) { animation-delay: 0.2s; }
+.transaction-item:nth-child(3) { animation-delay: 0.3s; }
+/* Add more if you expect more initial items, or use JS to add class for new items */
+
+.transaction-item:hover {
+    transform: translateX(0px) scale(1.03); /* Slightly move on hover */
+    border-left-color: var(--accent-glow-hover);
+    box-shadow: 0 5px 15px var(--shadow-medium);
+}
+.transaction-item span:last-child { font-weight: 600; }
+.transaction-item span:last-child[data-positive="true"] { color: var(--success-glow); } /* JS would set this data attribute */
+.transaction-item span:last-child[data-negative="true"] { color: var(--danger-glow); }
+
+#transactions-container:empty::before {
+    content: "No transactions yet. Add one!"; display: block; text-align: center;
+    color: var(--text-secondary); padding: var(--spacing-unit) * 2; font-style: italic;
+}
+
+#summary-section p#summary { font-size: 1.2rem; color: var(--text-primary); line-height: 1.7; }
+#summary-section p#summary:empty::before {
+    content: "Summary will appear here."; color: var(--text-secondary); font-style: italic;
+}
+
+/* 6. Footer
+   -------------------------------------------------------------------------- */
+footer {
+    text-align: center;
+    padding: calc(var(--spacing-unit) * 1.5) 0;
+    margin-top: calc(var(--spacing-unit) * 2);
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    border-top: 1px solid var(--border-color);
+    animation: fadeInUp 0.8s 1s var(--transition-medium) both; /* Delayed fade up */
+}
+
+/* 7. CSS-Only Modal
+   -------------------------------------------------------------------------- */
+.modal-state { display: none; } /* Hide the checkbox */
+
+.modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(13, 17, 23, 0.85); /* Dark overlay with blur potential */
+    backdrop-filter: blur(5px); /* If browser supports */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    z-index: 9999;
+    transition: opacity var(--transition-medium), visibility var(--transition-medium);
+    padding: var(--spacing-unit);
+}
+.modal-state:checked ~ .modal {
+    opacity: 1;
+    visibility: visible;
+}
+.modal-state:checked ~ .modal .modal-content {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+}
+
+.modal-overlay { /* Click outside to close */
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    cursor: pointer;
+}
+
+.modal-content {
+    position: relative;
+    background-color: var(--bg-primary);
+    padding: calc(var(--spacing-unit) * 2);
+    border-radius: var(--border-radius);
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 15px 40px var(--shadow-hard);
+    z-index: 1; /* Above overlay */
+    transform: scale(0.9) translateY(30px);
+    opacity: 0;
+    transition: transform var(--transition-medium) 0.1s, opacity var(--transition-medium) 0.1s; /* Slight delay for content animation */
+}
+.modal-content h2 {
+    margin-top: 0;
+    color: var(--accent-glow);
+    text-align: center;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: var(--spacing-unit);
+    right: var(--spacing-unit);
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: calc(var(--spacing-unit) * 0.5);
+    line-height: 1;
+    transition: color var(--transition-fast), transform var(--transition-fast);
+}
+.modal-close-btn:hover {
+    color: var(--accent-glow);
+    transform: rotate(90deg) scale(1.1);
+}
+
+#modal-transaction-form label {
+    color: var(--text-secondary);
+    margin-top: var(--spacing-unit);
+}
+
+/* 8. Animation Keyframes
+   -------------------------------------------------------------------------- */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideDownFade {
+    from { opacity: 0; transform: translateY(-50px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideInFromLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 5px var(--accent-glow); }
+    50% { box-shadow: 0 0 15px var(--accent-glow), 0 0 25px var(--accent-glow); }
+}
+@keyframes ripple { /* Simple ripple */
+    to { opacity: 0; transform: scale(10, 10) translate(-50%, -50%); }
+}
+
+/* Apply entrance animations to sections with delay */
+.animated-section {
+    opacity: 0;
+    animation: fadeInUp 0.6s var(--transition-medium) forwards;
+}
+.left-section #currency-section    { animation-delay: 0.2s; }
+.left-section #income-section      { animation-delay: 0.3s; }
+.left-section > div:last-of-type   { animation-delay: 0.4s; } /* Modal trigger button section */
+.right-section #transactions-list  { animation-delay: 0.5s; }
+#summary-section-parent            { animation-delay: 0.6s; }
+#clear-dat                         { animation-delay: 0.7s; }
+
+
+/* 9. Custom Scrollbar
+   -------------------------------------------------------------------------- */
+::-webkit-scrollbar { width: 12px; height: 12px; }
+::-webkit-scrollbar-track { background: var(--bg-deepest); }
+::-webkit-scrollbar-thumb {
+    background: var(--bg-interactive);
+    border-radius: var(--border-radius);
+    border: 3px solid var(--bg-deepest);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--accent-glow); }
+
+/* 10. Responsive Adjustments
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+    body { padding: var(--spacing-unit); }
+    .container { padding: var(--spacing-unit); }
+    .main-content { flex-direction: column; gap: var(--spacing-unit); }
+    header h1 { font-size: 2.2rem; }
+    h2 { font-size: 1.4rem; }
+    .btn { padding: calc(var(--spacing-unit) * 0.9) calc(var(--spacing-unit) * 1.2); }
+    .modal-content { margin: var(--spacing-unit); padding: var(--spacing-unit) * 1.5; }
+}
+
+/* --- Notification System (in your styles.css) --- */
+#notification-area {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none; /* Clicks pass through the container */
+}
+
+.notification {
+    padding: 15px 20px;
+    border-radius: var(--border-radius);
+    color: var(--bg-deepest); /* Default text color for notifications */
+    box-shadow: 0 5px 15px var(--shadow-medium);
+    min-width: 280px;
+    max-width: 350px;
+    opacity: 0;
+    transform: translateX(100%); /* Start off-screen */
+    transition: opacity 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), transform 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+    pointer-events: auto; /* Individual notifications are interactive */
+}
+
+.notification.notification-visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification.notification-fade-out {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.notification-info { background-color: var(--accent-glow); }
+.notification-success { background-color: var(--success-glow); }
+.notification-warning { background-color: #f0ad4e; color: var(--bg-deepest); }
+.notification-error { background-color: var(--danger-glow); color: var(--text-primary); }
